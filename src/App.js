@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback, useState } from 'react';
+import ShowImage from './ShowImage';
+
+import DropBox from './DropBox';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [images, setImages] = useState([]);
+
+	const onDrop = useCallback((acceptedFiles) => {
+		acceptedFiles.map((file, index) => {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				setImages((prevState) => [
+					...prevState,
+					{ id: index, src: e.target.result },
+				]);
+			};
+
+			reader.readAsDataURL(file);
+			return file;
+		});
+	}, []);
+
+	return (
+		<div className="App">
+			<DropBox onDrop={onDrop} />
+			<ShowImage images={images} />
+		</div>
+	);
 }
 
 export default App;
