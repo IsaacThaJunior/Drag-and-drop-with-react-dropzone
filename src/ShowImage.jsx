@@ -5,6 +5,7 @@ const ShowImage = ({ images }) => {
 		return <Image image={image} />;
 	};
 
+
 	return <div className="container">{images.map(show)}</div>;
 };
 

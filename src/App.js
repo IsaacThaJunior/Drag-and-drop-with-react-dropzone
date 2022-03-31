@@ -5,6 +5,9 @@ import DropBox from './DropBox';
 
 function App() {
 	const [images, setImages] = useState([]);
+	// const [validFiles, setValidFiles] = useState('');
+
+
 
 	const onDrop = useCallback((acceptedFiles) => {
 		acceptedFiles.map((file, index) => {
@@ -23,10 +26,18 @@ function App() {
 	}, []);
 
 	return (
-		<div className="App">
-			<DropBox onDrop={onDrop} />
-			<ShowImage images={images} />
-		</div>
+		<>
+			<div className="App">
+				<DropBox onDrop={onDrop} />
+				<ShowImage
+					images={images}
+					// onChange={(e) => {
+					// 	setValidFiles(e.target.images[0]);
+					// }}
+				/>
+			</div>
+		
+		</>
 	);
 }
 

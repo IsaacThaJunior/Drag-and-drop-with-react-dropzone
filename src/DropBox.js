@@ -1,4 +1,6 @@
 import { useDropzone } from 'react-dropzone';
+import Axios from 'axios';
+import { useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -34,6 +36,8 @@ const Container = styled.div`
 `;
 
 function DropBox({ onDrop }) {
+	const [imageSent, setImageSent] = useState([]);
+
 	const {
 		getRootProps,
 		getInputProps,
@@ -49,6 +53,21 @@ function DropBox({ onDrop }) {
 		noKeyboard: true,
 	});
 
+	const handleFile = (e) => {
+		setImageSent(e.target.files[0]);
+	};
+
+	const uploadFiles = () => {
+		const formData = new FormData();
+		console.log(imageSent);
+		formData.append('image', imageSent);
+		formData.append('key', 'fec919cec739d1b3c6772b4bc817c6d4');
+
+		Axios.post('https://api.imgbb.com/1/upload', formData).then((response) => {
+			console.log(response);
+		});
+	};
+
 	const lists = acceptedFiles.map((list) => (
 		<li key={list.path}>
 			{list.path} - {list.size} bytes
@@ -57,13 +76,20 @@ function DropBox({ onDrop }) {
 
 	return (
 		<>
-			{' '}
 			<section className="dropbox">
+				<button className="upload-btn" onClick={() => uploadFiles()}>
+					Upload Images
+				</button>
 				<Container
 					className="dropbox"
 					{...getRootProps({ isDragAccept, isFocused, isDragReject })}
 				>
-					<input {...getInputProps()} />
+					<input
+						{...getInputProps({
+							onChange: handleFile,
+						})}
+					/>
+
 					<p>Drag 'n' drop some files here</p>
 					<button type="button" className="btn" onClick={open}>
 						Click to select file
